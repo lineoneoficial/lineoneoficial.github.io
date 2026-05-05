@@ -38,21 +38,40 @@
         let currentUser = null;
         let calendar = null;
 
-        async function login() {
-            const pin = document.getElementById('pin-input').value;
-            const res = await fetch(`${API_URL}?action=getTatuadores`);
-            const tatuadores = await res.json();
-            
-            const user = tatuadores.find(t => t.PIN == pin);
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('tatuador', JSON.stringify(user));
-                document.getElementById('login-screen').classList.add('hidden');
-                initCalendar();
-            } else {
-                alert("PIN incorreto");
-            }
+async function login() {
+    const pin = document.getElementById('pin-input').value;
+    
+    try {
+        const res = await fetch(`${API_URL}?action=getTatuadores`);
+        const data = await res.json();
+        
+        // DEBUG: Veja o que está chegando no console do navegador (F12)
+        console.log("Dados recebidos:", data);
+
+        // Garante que estamos lidando com uma array
+        const tatuadores = Array.isArray(data) ? data : [];
+
+        if (tatuadores.length === 0) {
+            console.error("A lista de tatuadores está vazia ou o formato está incorreto.");
+            alert("Erro ao carregar dados. Verifique o console.");
+            return;
         }
+
+        const user = tatuadores.find(t => String(t.PIN) === String(pin));
+
+        if (user) {
+            currentUser = user;
+            localStorage.setItem('tatuador', JSON.stringify(user));
+            document.getElementById('login-screen').classList.add('hidden');
+            initCalendar();
+        } else {
+            alert("PIN incorreto");
+        }
+    } catch (error) {
+        console.error("Erro na requisição:", error);
+        alert("Não foi possível conectar ao servidor.");
+    }
+}
 
         function initCalendar() {
             document.getElementById('welcome-msg').innerText = `Bem-vindo, ${currentUser.Nome}`;
