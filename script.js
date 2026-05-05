@@ -1,6 +1,6 @@
 // ==================== Configuration ====================
 const CONFIG = {
-  SHEET_API_URL: 'YOUR_GOOGLE_SCRIPT_URL_HERE',
+  SHEET_API_URL: 'https://script.google.com/macros/s/AKfycbw1DUPJsEgVU5yhG0zsEBO9nil8OtciAc4aVnUSMEOdbWMeddfhYvU4LV7csrxnmgNdSA/exec',
   TATUADORES: ['Carlos', 'Mariana', 'Rafael', 'Carla'],
   BANCADAS: [1, 2, 3, 4],
   COLORS: {
