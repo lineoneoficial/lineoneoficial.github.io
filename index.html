@@ -3,99 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Manager | Black & White</title>
+    <title>SISTEMA | ESTÚDIO TATTOO</title>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .fc-event { border: none !important; border-radius: 8px; padding: 5px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .fc-header-toolbar { padding: 1rem; }
-        .bancada-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; display: block; opacity: 0.8; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        .fc-event { border: none !important; border-radius: 6px; padding: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
+        .bancada-label { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px; opacity: 0.8; }
+        .sidebar-photo { filter: grayscale(100%); transition: all 0.3s ease; }
+        .sidebar-photo:hover { filter: grayscale(0%); transform: scale(1.05); }
     </style>
 </head>
-<body class="bg-white text-zinc-900 font-sans">
+<body class="bg-zinc-50 text-zinc-900 font-sans">
 
-    <!-- LOGIN -->
-    <div id="login-screen" class="fixed inset-0 bg-white flex items-center justify-center z-[100]">
-        <div class="w-full max-w-sm p-10">
-            <h1 class="text-5xl font-black italic tracking-tighter text-center mb-10">TATTOO.</h1>
-            <div class="space-y-4">
-                <input type="password" id="pin-input" placeholder="SEU PIN DE ACESSO" 
-                    class="w-full bg-zinc-100 border-none p-5 rounded-2xl text-center text-2xl font-bold focus:ring-2 focus:ring-black transition-all">
-                <button onclick="login()" id="login-btn" class="w-full bg-black text-white p-5 rounded-2xl font-black hover:bg-zinc-800 transition-all uppercase tracking-widest">Entrar</button>
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen" class="fixed inset-0 bg-zinc-950 flex items-center justify-center z-[100]">
+        <div class="w-full max-w-sm p-10 text-center">
+            <h1 class="text-4xl font-black italic tracking-tighter text-white mb-10">STUDIO.</h1>
+            <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl">
+                <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-6">Acesso Tatuador</p>
+                <input type="password" id="pin-input" placeholder="SEU PIN" 
+                    class="w-full bg-zinc-800 border-none p-5 rounded-2xl text-center text-3xl font-bold text-white mb-4 focus:ring-2 focus:ring-white transition-all">
+                <button onclick="login()" id="login-btn" class="w-full bg-white text-black p-5 rounded-2xl font-black hover:bg-zinc-200 transition-all uppercase">Entrar</button>
             </div>
         </div>
     </div>
 
-    <!-- APP PRINCIPAL -->
+    <!-- SISTEMA PRINCIPAL -->
     <div id="app" class="hidden flex flex-col md:flex-row min-h-screen">
         
-        <!-- SIDEBAR: PERFIS DOS TATUADORES -->
-        <aside class="w-full md:w-80 bg-zinc-50 border-r border-zinc-200 p-6 flex flex-col">
-            <h2 class="text-2xl font-black italic mb-8">EQUIPE.</h2>
-            <div id="team-list" class="space-y-6 overflow-y-auto flex-grow">
-                <!-- Perfis serão inseridos aqui -->
+        <!-- SIDEBAR: PERFIS -->
+        <aside class="w-full md:w-72 bg-white border-r border-zinc-200 p-6 flex flex-col">
+            <div class="mb-10">
+                <h2 class="text-2xl font-black italic tracking-tighter">EQUIPE.</h2>
+                <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Estúdio de Tatuagem</p>
             </div>
+
+            <div id="team-list" class="space-y-6 flex-grow overflow-y-auto pr-2">
+                <!-- Perfis injetados via JS -->
+            </div>
+
             <div class="mt-8 pt-6 border-t border-zinc-200">
-                <p id="user-logged" class="text-xs font-bold uppercase text-zinc-400 mb-2"></p>
-                <button onclick="logout()" class="text-xs font-black text-red-500 uppercase hover:underline">Sair do Sistema</button>
+                <div class="flex items-center gap-3 mb-4">
+                    <div id="current-user-dot" class="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span id="user-display" class="text-xs font-bold uppercase"></span>
+                </div>
+                <button onclick="logout()" class="text-[10px] font-black text-red-500 uppercase hover:tracking-widest transition-all">Sair do Sistema</button>
             </div>
         </aside>
 
         <!-- AGENDA -->
-        <main class="flex-grow p-4 md:p-8">
-            <div class="bg-white rounded-3xl border border-zinc-200 shadow-2xl overflow-hidden">
+        <main class="flex-grow p-4 md:p-8 bg-zinc-50">
+            <div class="bg-white rounded-3xl shadow-xl border border-zinc-200 overflow-hidden">
                 <div id="calendar"></div>
             </div>
         </main>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbw1DUPJsEgVU5yhG0zsEBO9nil8OtciAc4aVnUSMEOdbWMeddfhYvU4LV7csrxnmgNdSA/exec"; 
+        const API_URL = "SUA_URL_DO_GOOGLE_SCRIPT_AQUI"; // <--- COLOQUE SUA URL AQUI
         let currentUser = null;
-        let tatuadoresRaw = [];
+        let allTatuadores = [];
 
         async function login() {
             const pin = document.getElementById('pin-input').value;
             const btn = document.getElementById('login-btn');
-            btn.innerText = "CARREGANDO...";
+            btn.innerText = "VERIFICANDO...";
 
             try {
                 const response = await fetch(`${API_URL}?action=getTatuadores`);
-                tatuadoresRaw = await response.json();
-                const user = tatuadoresRaw.find(t => String(t.PIN) === String(pin));
+                allTatuadores = await response.json();
+                const user = allTatuadores.find(t => String(t.PIN) === String(pin));
 
                 if (user) {
                     currentUser = user;
-                    localStorage.setItem('tattoo_session', JSON.stringify(user));
-                    showApp();
+                    localStorage.setItem('studio_session', JSON.stringify(user));
+                    startApp();
                 } else {
-                    alert("Acesso Negado.");
+                    alert("PIN incorreto.");
                     btn.innerText = "ENTRAR";
                 }
             } catch (e) {
-                alert("Erro de conexão.");
+                alert("Erro ao conectar.");
                 btn.innerText = "ENTRAR";
             }
         }
 
-        function showApp() {
+        function startApp() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            document.getElementById('user-logged').innerText = `Logado como: ${currentUser.Nome}`;
-            renderTeam();
+            document.getElementById('user-display').innerText = currentUser.Nome;
+            renderProfiles();
             renderCalendar();
         }
 
-        function renderTeam() {
+        function renderProfiles() {
             const list = document.getElementById('team-list');
-            list.innerHTML = tatuadoresRaw.map(t => `
+            list.innerHTML = allTatuadores.map(t => `
                 <div class="flex items-center gap-4 group">
-                    <img src="${t.Foto || 'https://via.placeholder.com/150'}" class="w-14 h-14 rounded-full object-cover grayscale group-hover:grayscale-0 transition-all border-2 border-zinc-200">
+                    <img src="${t.Foto || 'https://via.placeholder.com/100'}" class="w-12 h-12 rounded-full object-cover sidebar-photo border border-zinc-200">
                     <div>
-                        <h3 class="font-black text-sm uppercase">${t.Nome}</h3>
-                        <a href="${t.Instagram}" target="_blank" class="text-xs text-zinc-500 hover:text-black italic">@instagram</a>
+                        <h3 class="text-xs font-black uppercase leading-none mb-1">${t.Nome}</h3>
+                        <a href="${t.Instagram}" target="_blank" class="text-[9px] text-zinc-400 font-bold hover:text-black transition-colors uppercase tracking-tighter">Instagram ↗</a>
                     </div>
                 </div>
             `).join('');
@@ -109,23 +117,23 @@
                 allDaySlot: false,
                 slotMinTime: '08:00:00',
                 slotMaxTime: '22:00:00',
-                slotDuration: '00:30:00',
-                nowIndicator: true,
                 headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridDay,dayGridMonth' },
                 events: `${API_URL}?action=getEvents`,
                 
                 eventContent: function(arg) {
                     return {
-                        html: `<div class="p-1 text-white">
-                                <span class="bancada-badge">Bancada ${arg.event.extendedProps.bancada}</span>
-                                <div class="font-bold text-xs">${arg.event.title}</div>
-                               </div>`
+                        html: `
+                            <div class="p-1">
+                                <span class="bancada-label">BANCADA ${arg.event.extendedProps.bancada}</span>
+                                <div class="text-[11px] font-black uppercase text-white truncate">${arg.event.title}</div>
+                            </div>
+                        `
                     };
                 },
 
                 selectable: true,
                 select: async function(info) {
-                    const bancada = prompt("EM QUAL BANCADA? (1, 2, 3 ou 4)");
+                    const bancada = prompt("ESCOLHA A BANCADA (1, 2, 3 ou 4):");
                     if (["1", "2", "3", "4"].includes(bancada)) {
                         await fetch(API_URL, {
                             method: 'POST',
@@ -144,7 +152,7 @@
 
                 eventClick: async function(info) {
                     if (String(info.event.extendedProps.tatuadorId) === String(currentUser.ID)) {
-                        if (confirm("Deseja apagar sua reserva?")) {
+                        if (confirm("Remover este horário?")) {
                             await fetch(API_URL, {
                                 method: 'POST',
                                 mode: 'no-cors',
@@ -153,7 +161,7 @@
                             setTimeout(() => calendar.refetchEvents(), 1000);
                         }
                     } else {
-                        alert("Você não tem permissão para editar este agendamento.");
+                        alert("Você só pode gerenciar seus próprios horários.");
                     }
                 }
             });
@@ -166,13 +174,12 @@
         }
 
         window.onload = async () => {
-            const session = localStorage.getItem('tattoo_session');
+            const session = localStorage.getItem('studio_session');
             if (session) {
-                // Carrega a lista de tatuadores antes de restaurar a sessão para garantir os perfis na sidebar
                 const response = await fetch(`${API_URL}?action=getTatuadores`);
-                tatuadoresRaw = await response.json();
+                allTatuadores = await response.json();
                 currentUser = JSON.parse(session);
-                showApp();
+                startApp();
             }
         };
     </script>
