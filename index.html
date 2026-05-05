@@ -1,229 +1,117 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agenda do Estúdio</title>
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            dark: {
-              900: '#0a0a0a',
-              800: '#121212',
-              700: '#1a1a1a',
-              600: '#2a2a2a',
-              500: '#3a3a3a',
-            },
-            gold: {
-              400: '#d4af37',
-              500: '#c9a227',
-              600: '#b8941f',
-            }
-          }
-        }
-      }
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estúdio de Tatuagem - Gestão</title>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-dark-900 text-gray-100 min-h-screen">
-  <!-- Navbar -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-dark-800/95 backdrop-blur-sm border-b border-dark-600">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <i class="fas fa-gem text-gold-500 text-2xl"></i>
-        <span class="text-xl font-semibold tracking-wide">Estúdio<span class="text-gold-500">INK</span></span>
-      </div>
-      <button id="loginBtn" onclick="openLoginModal()" class="px-4 py-2 bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors flex items-center gap-2">
-        <i class="fas fa-sign-in-alt"></i>
-        <span>Login</span>
-      </button>
-      <div id="userInfo" class="hidden flex items-center gap-3">
-        <span id="userEmail" class="text-sm text-gray-400"></span>
-        <button onclick="logout()" class="px-3 py-1.5 bg-red-600/20 hover:bg-red-600/40 text-red-400 rounded-lg transition-colors text-sm">
-          Sair
-        </button>
-      </div>
-    </div>
-  </nav>
+<body class="bg-gray-100 font-sans">
 
-  <!-- Hero Section -->
-  <header class="pt-24 pb-8 px-4">
-    <div class="max-w-7xl mx-auto">
-      <h1 class="text-4xl md:text-5xl font-bold text-center mb-2">Agenda do Estúdio</h1>
-      <p class="text-gray-400 text-center mb-6">Gerencie seus agendamentos</p>
-      
-      <!-- Bancada Selector -->
-      <div class="flex justify-center gap-3 flex-wrap">
-        <button onclick="filterBancada('all')" class="bancada-btn active px-4 py-2 bg-gold-500 text-dark-900 font-semibold rounded-lg transition-all" data-bancada="all">
-          Todas
-        </button>
-        <button onclick="filterBancada(1)" class="bancada-btn px-4 py-2 bg-dark-600 hover:bg-dark-500 rounded-lg transition-all flex items-center gap-2" data-bancada="1">
-          <i class="fas fa-chair"></i> Bancada 01
-        </button>
-        <button onclick="filterBancada(2)" class="bancada-btn px-4 py-2 bg-dark-600 hover:bg-dark-500 rounded-lg transition-all flex items-center gap-2" data-bancada="2">
-          <i class="fas fa-chair"></i> Bancada 02
-        </button>
-        <button onclick="filterBancada(3)" class="bancada-btn px-4 py-2 bg-dark-600 hover:bg-dark-500 rounded-lg transition-all flex items-center gap-2" data-bancada="3">
-          <i class="fas fa-chair"></i> Bancada 03
-        </button>
-        <button onclick="filterBancada(4)" class="bancada-btn px-4 py-2 bg-dark-600 hover:bg-dark-500 rounded-lg transition-all flex items-center gap-2" data-bancada="4">
-          <i class="fas fa-chair"></i> Bancada 04
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 pb-12">
-    <div class="grid lg:grid-cols-3 gap-6">
-      <!-- Calendar Section -->
-      <div class="lg:col-span-2">
-        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600">
-          <div id="calendar" class="calendar-dark"></div>
+    <!-- Login Overlay -->
+    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-80 text-center">
+            <h2 class="text-2xl font-bold mb-4">Acesso Tatuador</h2>
+            <input type="password" id="pin-input" placeholder="Digite seu PIN" class="w-full p-2 border rounded mb-4 text-center text-xl">
+            <button onclick="login()" class="bg-black text-white w-full py-2 rounded font-bold hover:bg-gray-800">Entrar</button>
         </div>
-      </div>
-
-      <!-- Daily List Section -->
-      <div class="lg:col-span-1">
-        <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 sticky top-24">
-          <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-            <i class="fas fa-users text-gold-500"></i>
-            Quem atende hoje
-          </h2>
-          <div id="dailyArtists" class="space-y-3 max-h-[500px] overflow-y-auto">
-            <p class="text-gray-500 text-center py-4">Nenhum artista agendado hoje</p>
-          </div>
-        </div>
-      </div>
     </div>
-  </main>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeLoginModal()"></div>
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="bg-dark-800 rounded-xl p-6 w-full max-w-md border border-dark-600 relative">
-        <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-        <h2 class="text-2xl font-semibold mb-6 text-center">Login do Tatuador</h2>
-        <form onsubmit="handleLogin(event)" class="space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-2">E-mail</label>
-            <input type="email" id="loginEmail" required class="w-full px-4 py-3 bg-dark-700 border border-dark-500 rounded-lg focus:border-gold-500 focus:outline-none transition-colors" placeholder="seu@email.com">
-          </div>
-          <button type="submit" class="w-full py-3 bg-gold-500 hover:bg-gold-600 text-dark-900 font-semibold rounded-lg transition-colors">
-            Entrar
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Booking Modal -->
-  <div id="bookingModal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeBookingModal()"></div>
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="bg-dark-800 rounded-xl p-6 w-full max-w-md border border-dark-600 relative">
-        <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-        <h2 id="bookingModalTitle" class="text-2xl font-semibold mb-6">Novo Agendamento</h2>
-        <form onsubmit="handleBooking(event)" class="space-y-4">
-          <div>
-            <label class="block text-sm text-gray-400 mb-2">Nome do Cliente</label>
-            <input type="text" id="clientName" required class="w-full px-4 py-3 bg-dark-700 border border-dark-500 rounded-lg focus:border-gold-500 focus:outline-none transition-colors" placeholder="João Silva">
-          </div>
-          <div>
-            <label class="block text-sm text-gray-400 mb-2">Tatuador</label>
-            <select id="tatuador" required class="w-full px-4 py-3 bg-dark-700 border border-dark-500 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
-              <option value="">Selecione o tatuador</option>
-              <option value="Carlos">Carlos</option>
-              <option value="Mariana">Mariana</option>
-              <option value="Rafael">Rafael</option>
-              <option value="Carla">Carla</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm text-gray-400 mb-2">Bancada</label>
-            <select id="bancada" required class="w-full px-4 py-3 bg-dark-700 border border-dark-500 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
-              <option value="">Selecione a bancada</option>
-              <option value="1">Bancada 01</option>
-              <option value="2">Bancada 02</option>
-              <option value="3">Bancada 03</option>
-              <option value="4">Bancada 04</option>
-            </select>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto p-4 md:p-8">
+        <header class="flex justify-between items-center mb-8">
             <div>
-              <label class="block text-sm text-gray-400 mb-2">Data</label>
-              <input type="date" id="bookingDate" required class="w-full px-4 py-3 bg-dark-700 border border-dark-500 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
+                <h1 class="text-3xl font-black uppercase tracking-tighter">Studio Manager</h1>
+                <p id="welcome-msg" class="text-gray-500"></p>
             </div>
-            <div>
-              <label class="block text-sm text-gray-400 mb-2">Horário</label>
-              <input type="time" id="bookingTime" required class="w-full px-4 py-3 bg-dark-700 border border-dark-500 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm text-gray-400 mb-2">Duração (horas)</label>
-            <select id="duration" required class="w-full px-4 py-3 bg-dark-700 border border-dark-500 rounded-lg focus:border-gold-500 focus:outline-none transition-colors">
-              <option value="1">1 hora</option>
-              <option value="2">2 horas</option>
-              <option value="3">3 horas</option>
-              <option value="4">4 horas</option>
-            </select>
-          </div>
-          <input type="hidden" id="editEventId">
-          <div class="flex gap-3 pt-2">
-            <button type="button" onclick="closeBookingModal()" class="flex-1 py-3 bg-dark-600 hover:bg-dark-500 rounded-lg transition-colors">
-              Cancelar
-            </button>
-            <button type="submit" class="flex-1 py-3 bg-gold-500 hover:bg-gold-600 text-dark-900 font-semibold rounded-lg transition-colors">
-              Salvar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+            <button onclick="logout()" class="text-sm text-red-500 underline">Sair</button>
+        </header>
 
-  <!-- Event Detail Modal -->
-  <div id="eventModal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeEventModal()"></div>
-    <div class="flex items-center justify-center min-h-screen p-4">
-      <div class="bg-dark-800 rounded-xl p-6 w-full max-w-md border border-dark-600 relative">
-        <button onclick="closeEventModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-          <i class="fas fa-times text-xl"></i>
-        </button>
-        <h2 id="eventTitle" class="text-2xl font-semibold mb-4"></h2>
-        <div class="space-y-3 text-gray-300">
-          <p><i class="fas fa-user text-gold-500 w-6"></i> <span id="eventClient"></span></p>
-          <p><i class="fas fa-palette text-gold-500 w-6"></i> <span id="eventTatuador"></span></p>
-          <p><i class="fas fa-chair text-gold-500 w-6"></i> <span id="eventBancada"></span></p>
-          <p><i class="fas fa-clock text-gold-500 w-6"></i> <span id="eventTime"></span></p>
-          <p><i class="fas fa-user-circle text-gold-500 w-6"></i> <span id="eventEmail"></span></p>
+        <div class="bg-white p-4 rounded-xl shadow-sm">
+            <div id="calendar"></div>
         </div>
-        <div id="eventActions" class="flex gap-3 mt-6">
-          <button onclick="editEvent()" class="flex-1 py-3 bg-gold-500 hover:bg-gold-600 text-dark-900 font-semibold rounded-lg transition-colors">
-            Editar
-          </button>
-          <button onclick="deleteEvent()" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
-            Excluir
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-  <script src="script.js"></script>
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbw1DUPJsEgVU5yhG0zsEBO9nil8OtciAc4aVnUSMEOdbWMeddfhYvU4LV7csrxnmgNdSA/exec";
+        let currentUser = null;
+        let calendar = null;
+
+        async function login() {
+            const pin = document.getElementById('pin-input').value;
+            const res = await fetch(`${API_URL}?action=getTatuadores`);
+            const tatuadores = await res.json();
+            
+            const user = tatuadores.find(t => t.PIN == pin);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('tatuador', JSON.stringify(user));
+                document.getElementById('login-screen').classList.add('hidden');
+                initCalendar();
+            } else {
+                alert("PIN incorreto");
+            }
+        }
+
+        function initCalendar() {
+            document.getElementById('welcome-msg').innerText = `Bem-vindo, ${currentUser.Nome}`;
+            const calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridDay',
+                headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridDay,dayGridMonth' },
+                locale: 'pt-br',
+                slotMinTime: '09:00:00',
+                slotMaxTime: '21:00:00',
+                allDaySlot: false,
+                selectable: true,
+                events: `${API_URL}?action=getEvents`,
+                select: async function(info) {
+                    const bancada = prompt("Escolha a Bancada (1 a 4):");
+                    if (["1","2","3","4"].includes(bancada)) {
+                        await fetch(API_URL, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                action: 'add',
+                                tatuadorId: currentUser.ID,
+                                bancada: bancada,
+                                start: info.startStr,
+                                end: info.endStr
+                            })
+                        });
+                        calendar.refetchEvents();
+                    }
+                },
+                eventClick: async function(info) {
+                    if (info.event.extendedProps.tatuadorId == currentUser.ID) {
+                        if (confirm("Deseja excluir este agendamento?")) {
+                            await fetch(API_URL, {
+                                method: 'POST',
+                                body: JSON.stringify({ action: 'delete', id: info.event.id })
+                            });
+                            calendar.refetchEvents();
+                        }
+                    } else {
+                        alert("Você só pode excluir suas próprias reservas.");
+                    }
+                }
+            });
+            calendar.render();
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem('tatuador');
+            if (saved) {
+                currentUser = JSON.parse(saved);
+                document.getElementById('login-screen').classList.add('hidden');
+                initCalendar();
+            }
+        };
+    </script>
 </body>
 </html>
