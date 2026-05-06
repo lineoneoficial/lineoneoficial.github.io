@@ -2,74 +2,76 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STUDIO | Management System</title>
-    
-    <!-- Fontes e Frameworks -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>STUDIO OS | Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#F8F9FA] text-zinc-900">
+<body class="bg-[#F2F2F7] text-[#1C1C1E] antialiased">
 
-    <!-- TELA DE LOGIN -->
-    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-[200]">
-        <div class="w-full max-w-sm px-6">
-            <div class="text-center mb-12">
-                <h1 class="text-6xl font-[900] tracking-tighter text-white italic">STUDIO.</h1>
-                <p class="text-zinc-500 font-bold text-xs uppercase tracking-[0.3em] mt-2">Management Terminal</p>
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 bg-[#F2F2F7] z-[500] flex flex-col items-center justify-center p-8 transition-all duration-500">
+        <div class="w-full max-w-sm bg-white p-10 rounded-[3rem] shadow-xl text-center">
+            <h1 class="text-3xl font-black italic mb-2">ST.</h1>
+            <p class="text-gray-400 text-xs mb-10 font-bold uppercase tracking-widest">Acesso Terminal</p>
+            <input type="password" id="pin-input" inputmode="numeric" placeholder="••••" 
+                class="w-full bg-[#F2F2F7] border-none text-center text-4xl p-6 rounded-[2rem] focus:ring-2 focus:ring-black transition-all mb-4 font-bold tracking-widest">
+            <button onclick="login()" id="login-btn" class="w-full bg-black text-white font-bold py-5 rounded-[2rem] active:scale-95 transition-all text-sm uppercase tracking-widest">Entrar</button>
+        </div>
+    </div>
+
+    <!-- APP CONTAINER -->
+    <div id="app" class="hidden min-h-screen pb-24 opacity-0 transition-opacity duration-700">
+        <header class="p-8 pb-4 flex justify-between items-start">
+            <div>
+                <h2 class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-1" id="current-day-name">---</h2>
+                <h3 class="text-3xl font-extrabold tracking-tighter" id="greeting-text">Olá.</h3>
             </div>
-            <div class="bg-zinc-900 p-10 rounded-[2.5rem] border border-zinc-800 shadow-2xl">
-                <input type="password" id="pin-input" placeholder="••••" 
-                    class="w-full bg-zinc-800 border-none p-6 rounded-2xl text-center text-4xl font-black text-white mb-6 focus:ring-2 focus:ring-white transition-all placeholder:text-zinc-700">
-                <button onclick="login()" id="login-btn" 
-                    class="w-full bg-white text-black p-5 rounded-2xl font-black hover:scale-[1.02] active:scale-[0.98] transition-all uppercase tracking-widest">Acessar</button>
+            <div id="user-avatar-top" class="w-14 h-14 rounded-2xl bg-white bg-cover bg-center shadow-md border-4 border-white"></div>
+        </header>
+
+        <main class="px-6">
+            <section id="view-agenda" class="view-active">
+                <div class="bg-white rounded-[3rem] p-4 shadow-sm border border-gray-100">
+                    <div id="calendar"></div>
+                </div>
+            </section>
+            <section id="view-team" class="hidden space-y-4 py-4"></section>
+        </main>
+
+        <nav class="fixed bottom-6 left-6 right-6 h-20 bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 flex items-center justify-around px-10 z-[100]">
+            <button onclick="switchView('agenda')" class="nav-btn active text-black">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+            </button>
+            <button onclick="switchView('team')" class="nav-btn text-gray-200 hover:text-black">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </button>
+            <button onclick="logout()" class="text-red-200 hover:text-red-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
+            </button>
+        </nav>
+    </div>
+
+    <!-- MODAL RESERVA -->
+    <div id="modal-reserva" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[600] hidden items-end transition-all">
+        <div class="bg-white w-full rounded-t-[3.5rem] p-10 translate-y-full transition-transform duration-500">
+            <div class="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-10"></div>
+            <h4 class="text-2xl font-black mb-8 text-center tracking-tighter uppercase">Qual Bancada?</h4>
+            <div class="grid grid-cols-2 gap-4 mb-10">
+                <button onclick="setBancada(1)" class="b-btn active">Bancada 01</button>
+                <button onclick="setBancada(2)" class="b-btn">Bancada 02</button>
+                <button onclick="setBancada(3)" class="b-btn">Bancada 03</button>
+                <button onclick="setBancada(4)" class="b-btn">Bancada 04</button>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeModal()" class="flex-1 bg-gray-50 text-gray-400 p-6 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest">Sair</button>
+                <button onclick="confirmarReserva()" class="flex-[2] bg-black text-white p-6 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest shadow-xl">Confirmar</button>
             </div>
         </div>
     </div>
 
-    <!-- APP PRINCIPAL -->
-    <div id="app" class="hidden min-h-screen flex flex-col lg:flex-row">
-        
-        <!-- SIDEBAR -->
-        <aside class="w-full lg:w-[22rem] bg-white lg:h-screen lg:sticky lg:top-0 border-r border-zinc-100 p-8 flex flex-col overflow-y-auto no-scrollbar">
-            <div class="flex justify-between items-start mb-12">
-                <div>
-                    <h2 class="text-3xl font-[900] italic leading-none tracking-tighter">STUDIO.</h2>
-                    <span class="text-[0.6rem] font-bold text-zinc-400 uppercase tracking-widest">Operações Internas</span>
-                </div>
-                <button onclick="logout()" class="p-2 hover:bg-red-50 rounded-lg transition-colors group">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-zinc-400 group-hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- PERFIL LOGADO -->
-            <div class="mb-10 p-5 bg-zinc-900 rounded-3xl text-white shadow-xl flex items-center gap-4">
-                <div id="user-photo-main" class="w-14 h-14 rounded-2xl bg-zinc-800 bg-cover bg-center border border-zinc-700"></div>
-                <div>
-                    <p class="text-[0.6rem] font-black text-zinc-500 uppercase tracking-widest">Tatuador Ativo</p>
-                    <h3 id="user-name-main" class="font-bold text-lg leading-tight uppercase">---</h3>
-                </div>
-            </div>
-
-            <div class="flex-grow">
-                <h4 class="text-[0.6rem] font-black text-zinc-400 uppercase tracking-[0.2em] mb-6">Equipe</h4>
-                <div id="team-list" class="space-y-4"></div>
-            </div>
-        </aside>
-
-        <!-- ÁREA DO CALENDÁRIO -->
-        <main class="flex-grow p-4 lg:p-10">
-            <div class="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-zinc-100 overflow-hidden">
-                <div id="calendar"></div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Script Externo -->
     <script src="script.js"></script>
 </body>
 </html>
