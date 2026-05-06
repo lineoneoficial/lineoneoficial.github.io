@@ -2,83 +2,102 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>STUDIO OS | Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>STUDIO OS | Premium</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#F2F2F7] text-[#1C1C1E] antialiased">
+<body class="bg-slate-50 text-slate-900 antialiased overflow-x-hidden selection:bg-indigo-100">
 
     <!-- LOGIN SCREEN -->
-    <div id="login-screen" class="fixed inset-0 bg-[#F2F2F7] z-[500] flex flex-col items-center justify-center p-8 transition-all duration-500">
-        <div class="w-full max-w-sm bg-white p-10 rounded-[3rem] shadow-xl text-center">
-            <h1 class="text-3xl font-black italic mb-2">ST.</h1>
-            <p class="text-gray-400 text-xs mb-10 font-bold uppercase tracking-widest">Acesso Terminal</p>
-            <input type="password" id="pin-input" inputmode="numeric" placeholder="••••" 
-                class="w-full bg-[#F2F2F7] border-none text-center text-4xl p-6 rounded-[2rem] focus:ring-2 focus:ring-black transition-all mb-4 font-bold tracking-widest">
-            <button onclick="login()" id="login-btn" class="w-full bg-black text-white font-bold py-5 rounded-[2rem] active:scale-95 transition-all text-sm uppercase tracking-widest">Entrar</button>
+    <div id="login-screen" class="fixed inset-0 bg-white z-[500] flex flex-col items-center justify-center p-6 transition-all duration-700">
+        <div class="w-full max-w-sm">
+            <div class="text-center mb-10">
+                <div class="w-20 h-20 bg-indigo-50 rounded-[2rem] mx-auto flex items-center justify-center mb-6">
+                    <span class="text-4xl font-black text-indigo-600 italic tracking-tighter">ST.</span>
+                </div>
+                <h1 class="text-3xl font-black tracking-tight text-slate-800">Acesso Restrito</h1>
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">Management Protocol</p>
+            </div>
+            
+            <div class="bg-slate-50 p-8 rounded-[3rem] shadow-sm border border-slate-100/50">
+                <input type="password" id="pin-input" inputmode="numeric" placeholder="••••" 
+                    class="w-full bg-white border border-slate-100 text-center text-5xl p-6 rounded-[2rem] focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 transition-all font-black tracking-widest text-indigo-900 shadow-sm outline-none mb-4">
+                <button onclick="login()" id="login-btn" 
+                    class="w-full bg-indigo-600 text-white font-black py-6 rounded-[2rem] active:scale-95 hover:bg-indigo-700 transition-all text-xs uppercase tracking-[0.15em] shadow-xl shadow-indigo-200">
+                    Autenticar
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- APP CONTAINER -->
-    <div id="app" class="hidden min-h-screen pb-24 opacity-0 transition-opacity duration-700">
-        <header class="p-8 pb-4 flex justify-between items-start">
-            <div>
-                <h2 class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest mb-1" id="current-day-name">---</h2>
-                <h3 class="text-3xl font-extrabold tracking-tighter" id="greeting-text">Olá.</h3>
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="hidden min-h-screen opacity-0 transition-opacity duration-1000 flex flex-col lg:flex-row max-w-7xl mx-auto">
+        
+        <!-- NAVEGAÇÃO HÍBRIDA -->
+        <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[280px] h-[72px] bg-slate-900/95 backdrop-blur-xl rounded-[2.5rem] flex items-center justify-around px-2 z-[200] shadow-2xl border border-white/10
+                    lg:static lg:translate-x-0 lg:w-[100px] lg:h-[calc(100vh-4rem)] lg:flex-col lg:justify-start lg:py-10 lg:my-8 lg:ml-8 lg:rounded-[3rem] lg:gap-8">
+            <div class="hidden lg:flex w-12 h-12 bg-white/10 rounded-2xl items-center justify-center mb-auto">
+                <span class="text-xl font-black text-white italic tracking-tighter">ST.</span>
             </div>
-            <div id="user-avatar-top" class="w-14 h-14 rounded-2xl bg-white bg-cover bg-center shadow-md border-4 border-white"></div>
-        </header>
-
-        <main class="px-6">
-            <section id="view-agenda" class="view-active">
-                <div class="bg-white rounded-[3rem] p-4 shadow-sm border border-gray-100">
-                    <div id="calendar"></div>
-                </div>
-            </section>
-            <section id="view-team" class="hidden space-y-4 py-4"></section>
-        </main>
-
-        <nav class="fixed bottom-6 left-6 right-6 h-20 bg-white rounded-[2.5rem] shadow-2xl border border-gray-100 flex items-center justify-around px-10 z-[100]">
-            <button onclick="switchView('agenda')" class="nav-btn active text-black">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+            <button onclick="switchView('agenda')" class="nav-btn active group">
+                <div class="p-3 rounded-2xl group-hover:bg-white/10 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>
             </button>
-            <button onclick="switchView('team')" class="nav-btn text-gray-200 hover:text-black">
-                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            <button onclick="switchView('team')" class="nav-btn group">
+                <div class="p-3 rounded-2xl group-hover:bg-white/10 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
             </button>
-            <button onclick="logout()" class="text-red-200 hover:text-red-500">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg>
+            <button onclick="logout()" class="nav-btn text-rose-500/80 hover:text-rose-500 lg:mt-auto group">
+                <div class="p-3 rounded-2xl group-hover:bg-rose-500/10 transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg></div>
             </button>
         </nav>
+
+        <!-- ÁREA CENTRAL -->
+        <div class="flex-1 w-full flex flex-col lg:h-screen lg:overflow-hidden pb-32 lg:pb-0">
+            <header class="px-6 lg:px-12 pt-10 pb-6 flex justify-between items-center bg-slate-50/90 backdrop-blur-md z-[100]">
+                <div>
+                    <p id="current-day-label" class="text-indigo-500 text-[9px] font-black uppercase tracking-[0.2em] mb-1 lg:text-xs"></p>
+                    <h2 id="greeting-text" class="text-3xl lg:text-4xl font-black tracking-tighter text-slate-800">Olá.</h2>
+                </div>
+                <div id="user-avatar-top" class="w-14 h-14 lg:w-16 lg:h-16 rounded-[1.5rem] bg-white bg-cover bg-center shadow-lg border-2 border-white ring-1 ring-slate-100"></div>
+            </header>
+
+            <main class="px-4 lg:px-12 flex-1 lg:overflow-y-auto w-full max-w-5xl mx-auto">
+                <section id="view-agenda" class="view-active h-full">
+                    <div class="hidden lg:flex justify-end mb-4"><span class="text-xs font-bold text-slate-400 bg-white px-4 py-2 rounded-full shadow-sm border border-slate-100">Dica: Clique ou arraste no calendário para reservar</span></div>
+                    <div class="bg-white rounded-[2.5rem] lg:rounded-[3rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.05)] border border-slate-100/50 overflow-hidden min-h-[600px] mb-8">
+                        <div id="calendar" class="p-2 lg:p-4"></div>
+                    </div>
+                </section>
+                <section id="view-team" class="hidden space-y-4 pt-4 pb-10">
+                    <h3 class="text-xl font-black tracking-tighter text-slate-800 mb-6 px-2 lg:text-2xl">Equipe Residente</h3>
+                    <div id="team-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6"></div>
+                </section>
+            </main>
+        </div>
     </div>
 
-<!-- MODAL DE BANCADA E CLIENTE -->
+    <!-- MODAL DE RESERVA COMPLETO -->
     <div id="modal-reserva" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[600] hidden items-end lg:items-center justify-center transition-all">
         <div class="bg-white w-full lg:w-[480px] rounded-t-[3.5rem] lg:rounded-[3rem] p-8 lg:p-10 shadow-2xl translate-y-full lg:translate-y-10 lg:scale-95 opacity-0 transition-all duration-400 ease-out" id="modal-sheet">
             <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8 lg:hidden"></div>
-            
             <h4 class="text-2xl font-black italic tracking-tighter mb-6 text-center uppercase text-slate-800">Nova Reserva</h4>
             
-            <!-- Formulário: Cliente e Horários -->
             <div class="space-y-4 mb-8">
                 <div>
                     <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Nome do Cliente</label>
-                    <input type="text" id="cliente-nome" placeholder="Ex: João Silva" autocomplete="off"
-                        class="w-full bg-slate-50 border border-slate-100 text-slate-800 p-4 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-bold outline-none placeholder:text-slate-300">
+                    <input type="text" id="cliente-nome" placeholder="Ex: João Silva" autocomplete="off" class="w-full bg-slate-50 border border-slate-100 text-slate-800 p-4 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-bold outline-none placeholder:text-slate-300">
                 </div>
-                
                 <div class="flex gap-4">
                     <div class="flex-1">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Início</label>
-                        <input type="text" id="horario-inicio" disabled 
-                            class="w-full bg-slate-100 border border-slate-100 text-slate-500 p-4 rounded-2xl font-bold text-xs outline-none text-center">
+                        <input type="text" id="horario-inicio" disabled class="w-full bg-slate-100 border border-slate-100 text-slate-500 p-4 rounded-2xl font-bold text-xs outline-none text-center">
                     </div>
                     <div class="flex-1">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Fim</label>
-                        <input type="text" id="horario-fim" disabled 
-                            class="w-full bg-slate-100 border border-slate-100 text-slate-500 p-4 rounded-2xl font-bold text-xs outline-none text-center">
+                        <input type="text" id="horario-fim" disabled class="w-full bg-slate-100 border border-slate-100 text-slate-500 p-4 rounded-2xl font-bold text-xs outline-none text-center">
                     </div>
                 </div>
             </div>
