@@ -54,20 +54,46 @@
         </nav>
     </div>
 
-    <!-- MODAL RESERVA -->
-    <div id="modal-reserva" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[600] hidden items-end transition-all">
-        <div class="bg-white w-full rounded-t-[3.5rem] p-10 translate-y-full transition-transform duration-500">
-            <div class="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-10"></div>
-            <h4 class="text-2xl font-black mb-8 text-center tracking-tighter uppercase">Qual Bancada?</h4>
-            <div class="grid grid-cols-2 gap-4 mb-10">
+<!-- MODAL DE BANCADA E CLIENTE -->
+    <div id="modal-reserva" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[600] hidden items-end lg:items-center justify-center transition-all">
+        <div class="bg-white w-full lg:w-[480px] rounded-t-[3.5rem] lg:rounded-[3rem] p-8 lg:p-10 shadow-2xl translate-y-full lg:translate-y-10 lg:scale-95 opacity-0 transition-all duration-400 ease-out" id="modal-sheet">
+            <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8 lg:hidden"></div>
+            
+            <h4 class="text-2xl font-black italic tracking-tighter mb-6 text-center uppercase text-slate-800">Nova Reserva</h4>
+            
+            <!-- Formulário: Cliente e Horários -->
+            <div class="space-y-4 mb-8">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Nome do Cliente</label>
+                    <input type="text" id="cliente-nome" placeholder="Ex: João Silva" autocomplete="off"
+                        class="w-full bg-slate-50 border border-slate-100 text-slate-800 p-4 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-bold outline-none placeholder:text-slate-300">
+                </div>
+                
+                <div class="flex gap-4">
+                    <div class="flex-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Início</label>
+                        <input type="text" id="horario-inicio" disabled 
+                            class="w-full bg-slate-100 border border-slate-100 text-slate-500 p-4 rounded-2xl font-bold text-xs outline-none text-center">
+                    </div>
+                    <div class="flex-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2 px-1">Fim</label>
+                        <input type="text" id="horario-fim" disabled 
+                            class="w-full bg-slate-100 border border-slate-100 text-slate-500 p-4 rounded-2xl font-bold text-xs outline-none text-center">
+                    </div>
+                </div>
+            </div>
+
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-3 text-center">Estação de Trabalho</label>
+            <div class="grid grid-cols-2 gap-3 mb-8">
                 <button onclick="setBancada(1)" class="b-btn active">Bancada 01</button>
                 <button onclick="setBancada(2)" class="b-btn">Bancada 02</button>
                 <button onclick="setBancada(3)" class="b-btn">Bancada 03</button>
                 <button onclick="setBancada(4)" class="b-btn">Bancada 04</button>
             </div>
-            <div class="flex gap-4">
-                <button onclick="closeModal()" class="flex-1 bg-gray-50 text-gray-400 p-6 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest">Sair</button>
-                <button onclick="confirmarReserva()" class="flex-[2] bg-black text-white p-6 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest shadow-xl">Confirmar</button>
+
+            <div class="flex gap-3">
+                <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-500 p-5 rounded-[2rem] font-bold text-[10px] uppercase tracking-widest active:scale-95 hover:bg-slate-200 transition-all">Cancelar</button>
+                <button onclick="confirmarReserva()" class="flex-[2] bg-indigo-600 text-white p-5 rounded-[2rem] font-black text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-200 active:scale-95 hover:bg-indigo-700 transition-all">Confirmar</button>
             </div>
         </div>
     </div>
