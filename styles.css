@@ -1,41 +1,32 @@
-body { font-family: 'Inter', sans-serif; }
+body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 
-/* Customização FullCalendar */
-.fc { --fc-border-color: #e5e7eb; --fc-today-bg-color: #f9fafb; border: none !important; }
-.fc-header-toolbar { padding: 1.5rem !important; margin-bottom: 0 !important; }
-.fc-toolbar-title { font-weight: 900; text-transform: uppercase; letter-spacing: -1px; font-size: 1.25rem !important; }
+/* CALENDAR SOFT UI */
+.fc { border: none !important; }
+.fc-header-toolbar { padding: 1.5rem 1rem !important; }
+.fc-toolbar-title { font-weight: 800 !important; font-size: 1.2rem !important; color: #1C1C1E; }
+.fc-button { background: transparent !important; color: #1C1C1E !important; border: none !important; }
 
-/* Botões do Calendário */
-.fc-button { 
-    background: #000 !important; 
-    border: none !important; 
-    border-radius: 8px !important; 
-    text-transform: uppercase; 
-    font-size: 0.7rem !important; 
-    font-weight: 700 !important; 
-}
-.fc-button-primary:disabled { background: #d1d5db !important; }
+/* TIMELINE VERTICAL (Estilo image_aec73a.png) */
+.fc-timegrid-slot { height: 6rem !important; border-bottom: 1px solid #F2F2F7 !important; }
+.fc-timegrid-slot-label { font-size: 0.7rem; color: #AEAEB2; font-weight: 600; vertical-align: top !important; padding-top: 15px !important; }
+.fc-theme-standard td, .fc-theme-standard th { border: none !important; }
 
-/* Estilo dos Eventos */
-.fc-event { 
-    border: none !important; 
-    padding: 5px 8px !important; 
-    border-radius: 8px !important; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
-    transition: transform 0.2s; 
-}
-.fc-event:hover { transform: translateY(-2px); filter: brightness(1.1); }
-
-.bancada-tag { 
-    font-size: 0.6rem; 
-    font-weight: 900; 
-    background: rgba(255,255,255,0.2); 
-    padding: 2px 6px; 
-    border-radius: 4px; 
-    margin-bottom: 4px; 
-    display: inline-block; 
+/* EVENT CARDS */
+.fc-v-event { 
+    background: #ffffff !important; border: none !important; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05) !important; 
+    border-radius: 1.5rem !important; margin: 0 10px !important; padding: 0 !important;
 }
 
-/* Scrollbars Invisíveis */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.event-card { display: flex; height: 100%; padding: 15px; align-items: center; }
+.event-bar { width: 4px; height: 60%; border-radius: 10px; margin-right: 15px; }
+.tatuador-nome { font-weight: 800; font-size: 0.85rem; color: #1C1C1E; text-transform: uppercase; }
+.bancada-info { font-weight: 600; font-size: 0.65rem; color: #AEAEB2; display: block; margin-top: 2px; }
+
+/* UI ELEMENTS */
+.b-btn { @apply border-2 border-gray-50 p-5 rounded-[1.5rem] text-[10px] font-bold uppercase transition-all text-gray-300 text-center; }
+.b-btn.active { @apply border-black text-black bg-gray-50 scale-[1.02]; }
+.nav-btn.active { transform: translateY(-5px); }
+
+.view-active { animation: viewIn 0.5s ease forwards; }
+@keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
