@@ -1,5 +1,5 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbw1DUPJsEgVU5yhG0zsEBO9nil8OtciAc4aVnUSMEOdbWMeddfhYvU4LV7csrxnmgNdSA/exec"; 
-const SESSION_KEY = "studio_pro_final_v1";
+const SESSION_KEY = "studio_os_final_release";
 
 let currentUser = null;
 let tatuadoresData = [];
@@ -88,12 +88,13 @@ function renderCalendar() {
             const accent = colors[String(arg.event.extendedProps.bancada)] || "#64748b";
             return { 
                 html: `
-                <div class="event-widget">
-                    <div class="event-color-bar" style="background-color: ${accent}"></div>
+                <div class="event-widget" style="border-left: 4px solid ${accent}; background: linear-gradient(135deg, ${accent}15 0%, #ffffff 100%); border-right: 1px solid #f1f5f9; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
                     <div class="event-content">
-                        <div class="event-time" style="color: ${accent}">${arg.timeText}</div>
-                        <h5>${arg.event.title}</h5>
-                        <span>Estação 0${arg.event.extendedProps.bancada}</span>
+                        <div class="event-header">
+                            <span class="badge-bancada" style="background-color: ${accent}20; color: ${accent}">St. 0${arg.event.extendedProps.bancada}</span>
+                            <span class="time-text">${arg.timeText}</span>
+                        </div>
+                        <h5 class="event-title">${arg.event.title}</h5>
                     </div>
                 </div>` 
             };
@@ -107,14 +108,32 @@ function renderCalendar() {
             openModal(); 
         },
         eventClick: (info) => {
-            if (String(info.event.extendedProps.tatuadorId) === String(currentUser.ID)) {
-                if (confirm("Remover esta reserva?")) {
-                    fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: info.event.id }) });
+            const ev = info.event;
+            const isOwner = String(ev.extendedProps.tatuadorId) === String(currentUser.ID);
+            const colors = { "1": "#10b981", "2": "#6366f1", "3": "#f59e0b", "4": "#f43f5e" };
+            const accent = colors[String(ev.extendedProps.bancada)] || "#64748b";
+            
+            document.getElementById('view-cliente-nome').innerText = ev.title;
+            document.getElementById('view-horario').innerText = info.timeText || "Horário Integral";
+            
+            const badge = document.getElementById('view-bancada-badge');
+            badge.innerText = `Bancada 0${ev.extendedProps.bancada}`;
+            badge.style.backgroundColor = accent + '20';
+            badge.style.color = accent;
+
+            const btnDelete = document.getElementById('btn-delete-reserva');
+            if (isOwner) {
+                btnDelete.classList.remove('hidden');
+                btnDelete.onclick = async () => {
+                    closeViewModal();
+                    ev.setProp('backgroundColor', '#f1f5f9');
+                    await fetch(API_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: 'delete', id: ev.id }) });
                     setTimeout(() => calendar.refetchEvents(), 800);
-                }
+                };
             } else {
-                alert(`Reservado por/para: ${info.event.title}\nEstação: 0${info.event.extendedProps.bancada}\nHorário: ${info.timeText}`);
+                btnDelete.classList.add('hidden');
             }
+            openViewModal();
         }
     });
     calendar.render();
@@ -149,6 +168,7 @@ function renderTeam() {
     `).join('');
 }
 
+// LOGICA DOS MODAIS (CRIAR E VISUALIZAR)
 function openModal() {
     const m = document.getElementById('modal-reserva');
     const sheet = document.getElementById('modal-sheet');
@@ -163,6 +183,25 @@ function openModal() {
 function closeModal() {
     const m = document.getElementById('modal-reserva');
     const sheet = document.getElementById('modal-sheet');
+    if (window.innerWidth >= 1024) sheet.classList.add('lg:translate-y-10', 'lg:scale-95', 'opacity-0');
+    else sheet.classList.add('translate-y-full', 'opacity-0');
+    setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 400);
+}
+
+function openViewModal() {
+    const m = document.getElementById('modal-view-reserva');
+    const sheet = document.getElementById('modal-view-sheet');
+    m.classList.remove('hidden'); m.classList.add('flex');
+    setTimeout(() => {
+        sheet.classList.remove('opacity-0');
+        if (window.innerWidth >= 1024) sheet.classList.remove('lg:translate-y-10', 'lg:scale-95');
+        else sheet.classList.remove('translate-y-full');
+    }, 10);
+}
+
+function closeViewModal() {
+    const m = document.getElementById('modal-view-reserva');
+    const sheet = document.getElementById('modal-view-sheet');
     if (window.innerWidth >= 1024) sheet.classList.add('lg:translate-y-10', 'lg:scale-95', 'opacity-0');
     else sheet.classList.add('translate-y-full', 'opacity-0');
     setTimeout(() => { m.classList.add('hidden'); m.classList.remove('flex'); }, 400);
