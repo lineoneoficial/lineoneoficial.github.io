@@ -18,10 +18,9 @@ body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparen
 .fc-now-indicator-arrow { border-color: #f43f5e !important; border-width: 5px 6px 5px 0 !important; border-top-color: transparent !important; border-bottom-color: transparent !important; }
 .fc-timegrid-col-events { margin: 0 12px 0 4px !important; }
 
-/* WIDGETS DE EVENTO PREMIUM (DEGRADÊ TRANSLÚCIDO) */
+/* WIDGETS DE EVENTO PREMIUM */
 .fc-v-event { background: transparent !important; border: none !important; box-shadow: none !important; }
 .event-widget {
-    background: #ffffff;
     border-radius: 1rem;
     height: 100%;
     display: flex;
@@ -37,20 +36,58 @@ body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparen
 .event-content { padding: 10px 12px; display: flex; flex-direction: column; height: 100%; }
 .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 .badge-bancada { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; padding: 3px 6px; border-radius: 6px; letter-spacing: 0.5px; }
-.time-text { font-size: 0.65rem; font-weight: 800; color: #64748b; }
-.event-title { font-weight: 900; font-size: 0.85rem; color: #0f172a; text-transform: uppercase; margin: 0; line-height: 1.2; letter-spacing: -0.5px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.time-text { font-size: 0.65rem; font-weight: 800; }
+.event-title { font-weight: 900; font-size: 0.85rem; text-transform: uppercase; margin: 0; line-height: 1.2; letter-spacing: -0.5px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
-/* UI ELEMENTS */
-.nav-btn { @apply text-slate-400 transition-all duration-300; } /* Mais claro para dar contraste no fundo escuro */
-.nav-btn:hover { @apply text-slate-200; }
-.nav-btn.active { @apply text-indigo-400; } /* Cor vibrante quando ativo */
-.nav-btn.active > div { @apply bg-indigo-500/20; } /* Fundo sutilmente colorido */
+/* UI ELEMENTS (NAV BAR ROXA COM ÍCONES BRANCOS) */
+.nav-btn {
+    color: rgba(255, 255, 255, 0.5); /* Branco com 50% de transparência (inativo) */
+    transition: all 0.3s;
+}
+.nav-btn:hover {
+    color: rgba(255, 255, 255, 0.9); /* Quase totalmente branco ao passar o mouse */
+}
+.nav-btn.active {
+    color: #ffffff; /* Branco total quando selecionado */
+}
+.nav-btn.active > div {
+    background-color: rgba(255, 255, 255, 0.2); /* Fundo branco translúcido no ícone ativo */
+    box-shadow: none; /* Remove a sombra escura anterior */
+}
 
-.b-btn { border: 2px solid #f8fafc; padding: 1.5rem; border-radius: 1.8rem; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #94a3b8; transition: all 0.2s ease; background: transparent; }
-.b-btn.active { border-color: #6366f1; color: #6366f1; background: #eef2ff; transform: scale(1.02); }
+/* BOTOES DE BANCADA COM BORDA E CONTRASTE */
+.b-btn {
+    border: 2px solid #cbd5e1;
+    padding: 1.2rem;
+    border-radius: 1rem;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #64748b;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f8fafc;
+    cursor: pointer;
+}
+.b-btn:hover {
+    border-color: #818cf8;
+    background: #e0e7ff;
+    color: #4f46e5;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 15px -3px rgba(99, 102, 241, 0.25);
+}
+/* BOTÃO SELECIONADO: SÓLIDO */
+.b-btn.active {
+    border-color: #4f46e5;
+    background: #4f46e5;
+    color: #ffffff;
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+}
 
 .view-active { animation: viewIn 0.5s ease-out forwards; }
 @keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* Desktop Tweaks */
 @media (min-width: 1024px) {
