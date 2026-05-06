@@ -115,8 +115,14 @@ function renderCalendar() {
             const colors = { "1": "#059669", "2": "#4f46e5", "3": "#d97706", "4": "#e11d48" };
             const accent = colors[String(ev.extendedProps.bancada)] || "#475569";
 
+            // CORREÇÃO: Pegando o horário exato do evento e forçando a formatação
+            const startHHMM = ev.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            const endHHMM = ev.end ? ev.end.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '??:??';
+
             document.getElementById('view-cliente-nome').innerText = ev.title;
-            document.getElementById('view-horario').innerText = info.timeText || "Horário Integral";
+
+            // Agora o horário aparece cravado (Ex: 14:00 - 18:00)
+            document.getElementById('view-horario').innerText = `${startHHMM} - ${endHHMM}`;
 
             const badge = document.getElementById('view-bancada-badge');
             badge.innerText = `Bancada 0${ev.extendedProps.bancada}`;
