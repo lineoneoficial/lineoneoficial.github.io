@@ -3,185 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA | ESTÚDIO TATTOO</title>
+    <title>STUDIO | Management System</title>
+    
+    <!-- Fontes e Frameworks -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .fc-event { border: none !important; border-radius: 6px; padding: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; }
-        .bancada-label { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 2px; opacity: 0.8; }
-        .sidebar-photo { filter: grayscale(100%); transition: all 0.3s ease; }
-        .sidebar-photo:hover { filter: grayscale(0%); transform: scale(1.05); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-zinc-50 text-zinc-900 font-sans">
+<body class="bg-[#F8F9FA] text-zinc-900">
 
     <!-- TELA DE LOGIN -->
-    <div id="login-screen" class="fixed inset-0 bg-zinc-950 flex items-center justify-center z-[100]">
-        <div class="w-full max-w-sm p-10 text-center">
-            <h1 class="text-4xl font-black italic tracking-tighter text-white mb-10">STUDIO.</h1>
-            <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-800 shadow-2xl">
-                <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-6">Acesso Tatuador</p>
-                <input type="password" id="pin-input" placeholder="SEU PIN" 
-                    class="w-full bg-zinc-800 border-none p-5 rounded-2xl text-center text-3xl font-bold text-white mb-4 focus:ring-2 focus:ring-white transition-all">
-                <button onclick="login()" id="login-btn" class="w-full bg-white text-black p-5 rounded-2xl font-black hover:bg-zinc-200 transition-all uppercase">Entrar</button>
+    <div id="login-screen" class="fixed inset-0 bg-black flex items-center justify-center z-[200]">
+        <div class="w-full max-w-sm px-6">
+            <div class="text-center mb-12">
+                <h1 class="text-6xl font-[900] tracking-tighter text-white italic">STUDIO.</h1>
+                <p class="text-zinc-500 font-bold text-xs uppercase tracking-[0.3em] mt-2">Management Terminal</p>
+            </div>
+            <div class="bg-zinc-900 p-10 rounded-[2.5rem] border border-zinc-800 shadow-2xl">
+                <input type="password" id="pin-input" placeholder="••••" 
+                    class="w-full bg-zinc-800 border-none p-6 rounded-2xl text-center text-4xl font-black text-white mb-6 focus:ring-2 focus:ring-white transition-all placeholder:text-zinc-700">
+                <button onclick="login()" id="login-btn" 
+                    class="w-full bg-white text-black p-5 rounded-2xl font-black hover:scale-[1.02] active:scale-[0.98] transition-all uppercase tracking-widest">Acessar</button>
             </div>
         </div>
     </div>
 
-    <!-- SISTEMA PRINCIPAL -->
-    <div id="app" class="hidden flex flex-col md:flex-row min-h-screen">
+    <!-- APP PRINCIPAL -->
+    <div id="app" class="hidden min-h-screen flex flex-col lg:flex-row">
         
-        <!-- SIDEBAR: PERFIS -->
-        <aside class="w-full md:w-72 bg-white border-r border-zinc-200 p-6 flex flex-col">
-            <div class="mb-10">
-                <h2 class="text-2xl font-black italic tracking-tighter">EQUIPE.</h2>
-                <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Estúdio de Tatuagem</p>
-            </div>
-
-            <div id="team-list" class="space-y-6 flex-grow overflow-y-auto pr-2">
-                <!-- Perfis injetados via JS -->
-            </div>
-
-            <div class="mt-8 pt-6 border-t border-zinc-200">
-                <div class="flex items-center gap-3 mb-4">
-                    <div id="current-user-dot" class="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span id="user-display" class="text-xs font-bold uppercase"></span>
+        <!-- SIDEBAR -->
+        <aside class="w-full lg:w-[22rem] bg-white lg:h-screen lg:sticky lg:top-0 border-r border-zinc-100 p-8 flex flex-col overflow-y-auto no-scrollbar">
+            <div class="flex justify-between items-start mb-12">
+                <div>
+                    <h2 class="text-3xl font-[900] italic leading-none tracking-tighter">STUDIO.</h2>
+                    <span class="text-[0.6rem] font-bold text-zinc-400 uppercase tracking-widest">Operações Internas</span>
                 </div>
-                <button onclick="logout()" class="text-[10px] font-black text-red-500 uppercase hover:tracking-widest transition-all">Sair do Sistema</button>
+                <button onclick="logout()" class="p-2 hover:bg-red-50 rounded-lg transition-colors group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-zinc-400 group-hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- PERFIL LOGADO -->
+            <div class="mb-10 p-5 bg-zinc-900 rounded-3xl text-white shadow-xl flex items-center gap-4">
+                <div id="user-photo-main" class="w-14 h-14 rounded-2xl bg-zinc-800 bg-cover bg-center border border-zinc-700"></div>
+                <div>
+                    <p class="text-[0.6rem] font-black text-zinc-500 uppercase tracking-widest">Tatuador Ativo</p>
+                    <h3 id="user-name-main" class="font-bold text-lg leading-tight uppercase">---</h3>
+                </div>
+            </div>
+
+            <div class="flex-grow">
+                <h4 class="text-[0.6rem] font-black text-zinc-400 uppercase tracking-[0.2em] mb-6">Equipe</h4>
+                <div id="team-list" class="space-y-4"></div>
             </div>
         </aside>
 
-        <!-- AGENDA -->
-        <main class="flex-grow p-4 md:p-8 bg-zinc-50">
-            <div class="bg-white rounded-3xl shadow-xl border border-zinc-200 overflow-hidden">
+        <!-- ÁREA DO CALENDÁRIO -->
+        <main class="flex-grow p-4 lg:p-10">
+            <div class="bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] border border-zinc-100 overflow-hidden">
                 <div id="calendar"></div>
             </div>
         </main>
     </div>
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbw1DUPJsEgVU5yhG0zsEBO9nil8OtciAc4aVnUSMEOdbWMeddfhYvU4LV7csrxnmgNdSA/exec"; // <--- COLOQUE SUA URL AQUI
-        let currentUser = null;
-        let allTatuadores = [];
-
-        async function login() {
-            const pin = document.getElementById('pin-input').value;
-            const btn = document.getElementById('login-btn');
-            btn.innerText = "VERIFICANDO...";
-
-            try {
-                const response = await fetch(`${API_URL}?action=getTatuadores`);
-                allTatuadores = await response.json();
-                const user = allTatuadores.find(t => String(t.PIN) === String(pin));
-
-                if (user) {
-                    currentUser = user;
-                    localStorage.setItem('studio_session', JSON.stringify(user));
-                    startApp();
-                } else {
-                    alert("PIN incorreto.");
-                    btn.innerText = "ENTRAR";
-                }
-            } catch (e) {
-                alert("Erro ao conectar.");
-                btn.innerText = "ENTRAR";
-            }
-        }
-
-        function startApp() {
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            document.getElementById('user-display').innerText = currentUser.Nome;
-            renderProfiles();
-            renderCalendar();
-        }
-
-        function renderProfiles() {
-            const list = document.getElementById('team-list');
-            list.innerHTML = allTatuadores.map(t => `
-                <div class="flex items-center gap-4 group">
-                    <img src="${t.Foto || 'https://via.placeholder.com/100'}" class="w-12 h-12 rounded-full object-cover sidebar-photo border border-zinc-200">
-                    <div>
-                        <h3 class="text-xs font-black uppercase leading-none mb-1">${t.Nome}</h3>
-                        <a href="${t.Instagram}" target="_blank" class="text-[9px] text-zinc-400 font-bold hover:text-black transition-colors uppercase tracking-tighter">Instagram ↗</a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderCalendar() {
-            const calendarEl = document.getElementById('calendar');
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridDay',
-                locale: 'pt-br',
-                allDaySlot: false,
-                slotMinTime: '08:00:00',
-                slotMaxTime: '22:00:00',
-                headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridDay,dayGridMonth' },
-                events: `${API_URL}?action=getEvents`,
-                
-                eventContent: function(arg) {
-                    return {
-                        html: `
-                            <div class="p-1">
-                                <span class="bancada-label">BANCADA ${arg.event.extendedProps.bancada}</span>
-                                <div class="text-[11px] font-black uppercase text-white truncate">${arg.event.title}</div>
-                            </div>
-                        `
-                    };
-                },
-
-                selectable: true,
-                select: async function(info) {
-                    const bancada = prompt("ESCOLHA A BANCADA (1, 2, 3 ou 4):");
-                    if (["1", "2", "3", "4"].includes(bancada)) {
-                        await fetch(API_URL, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            body: JSON.stringify({
-                                action: 'add',
-                                tatuadorId: currentUser.ID,
-                                bancada: bancada,
-                                start: info.startStr,
-                                end: info.endStr
-                            })
-                        });
-                        setTimeout(() => calendar.refetchEvents(), 1000);
-                    }
-                },
-
-                eventClick: async function(info) {
-                    if (String(info.event.extendedProps.tatuadorId) === String(currentUser.ID)) {
-                        if (confirm("Remover este horário?")) {
-                            await fetch(API_URL, {
-                                method: 'POST',
-                                mode: 'no-cors',
-                                body: JSON.stringify({ action: 'delete', id: info.event.id })
-                            });
-                            setTimeout(() => calendar.refetchEvents(), 1000);
-                        }
-                    } else {
-                        alert("Você só pode gerenciar seus próprios horários.");
-                    }
-                }
-            });
-            calendar.render();
-        }
-
-        function logout() {
-            localStorage.clear();
-            location.reload();
-        }
-
-        window.onload = async () => {
-            const session = localStorage.getItem('studio_session');
-            if (session) {
-                const response = await fetch(`${API_URL}?action=getTatuadores`);
-                allTatuadores = await response.json();
-                currentUser = JSON.parse(session);
-                startApp();
-            }
-        };
-    </script>
+    <!-- Script Externo -->
+    <script src="script.js"></script>
 </body>
 </html>
